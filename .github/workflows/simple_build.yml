@@ -23,11 +23,21 @@ jobs:
         channel: 'stable'
         cache: true
     
+    - name: Create asset directories
+      run: |
+        mkdir -p assets/images
+        mkdir -p assets/icons
+        touch assets/images/.gitkeep
+        touch assets/icons/.gitkeep
+    
     - name: Install dependencies
       run: flutter pub get
       
-    - name: Create necessary files
-      run: flutter create --platforms=android --org com.roxcard --project-name roxcard .
+    - name: Clean project
+      run: flutter clean
+    
+    - name: Remove conflicting file
+      run: rm -f android/app/src/main/java/com/example/roxcard/FlutterApplication.java
     
     - name: Build APK
       run: flutter build apk --debug
