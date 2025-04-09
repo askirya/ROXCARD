@@ -30,10 +30,10 @@ jobs:
       run: flutter create --platforms=android --org com.roxcard --project-name roxcard .
     
     - name: Build APK
-      run: flutter build apk --release
+      run: flutter build apk --debug
       
     - name: List built APK
       run: ls -la build/app/outputs/flutter-apk/
       
     - name: Store APK
-      run: mkdir -p $GITHUB_WORKSPACE/apk && cp build/app/outputs/flutter-apk/app-release.apk $GITHUB_WORKSPACE/apk/
+      run: mkdir -p $GITHUB_WORKSPACE/apk && cp build/app/outputs/flutter-apk/app-debug.apk $GITHUB_WORKSPACE/apk/
