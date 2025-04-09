@@ -24,7 +24,7 @@
 
     <application
         android:label="ROXCARD"
-        android:name="io.flutter.app.FlutterApplication"
+        android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:allowBackup="true"
         android:fullBackupContent="true"
