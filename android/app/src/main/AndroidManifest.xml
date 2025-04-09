@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.roxcard">  <!-- Изменено здесь -->
+    package="com.example.roxcard">
 
     <!-- NFC permissions -->
     <uses-permission android:name="android.permission.NFC" />
@@ -24,7 +24,7 @@
 
     <application
         android:label="ROXCARD"
-        android:name="io.flutter.app.FlutterApplication"  <!-- Изменено здесь -->
+        android:name="io.flutter.app.FlutterApplication"
         android:icon="@mipmap/ic_launcher"
         android:allowBackup="true"
         android:fullBackupContent="true"
