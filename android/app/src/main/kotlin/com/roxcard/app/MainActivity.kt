@@ -95,8 +95,15 @@ class MainActivity : FlutterActivity() {
             }
             
             // Устанавливаем наш сервис как предпочтительный для обработки платежей
-            val success = cardEmulationManager?.categoryAllowsForegroundPreference(
-                CardEmulation.CATEGORY_PAYMENT, serviceComponent) == true
+            // Исправленный код - проверяем версию API и используем соответствующий метод
+            val success = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                // Для Android 12 (API 31) и выше используем метод только с категорией
+                cardEmulationManager?.categoryAllowsForegroundPreference(CardEmulation.CATEGORY_PAYMENT) == true
+            } else {
+                // Для более старых версий используем метод с компонентом
+                cardEmulationManager?.setPreferredService(this, serviceComponent) == true &&
+                cardEmulationManager?.isDefaultServiceForCategory(serviceComponent, CardEmulation.CATEGORY_PAYMENT) == true
+            }
 
             if (success) {
                 Log.d("MainActivity", "Card emulation service started successfully")
@@ -159,4 +166,4 @@ class MainActivity : FlutterActivity() {
             nfcAdapter?.disableForegroundDispatch(this)
         }
     }
-} 
+}
