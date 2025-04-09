@@ -27,7 +27,7 @@ jobs:
       run: flutter pub get
       
     - name: Create necessary files
-      run: flutter create --platforms=android --org com.roxcard .
+      run: flutter create --platforms=android --org com.roxcard --project-name roxcard .
     
     - name: Build APK
       run: flutter build apk --release
