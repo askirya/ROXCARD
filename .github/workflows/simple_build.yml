@@ -49,11 +49,7 @@ jobs:
       run: mkdir -p $GITHUB_WORKSPACE/apk && cp build/app/outputs/flutter-apk/app-debug.apk $GITHUB_WORKSPACE/apk/
     
     - name: Upload APK as artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: app-debug-apk
         path: $GITHUB_WORKSPACE/apk/app-debug.apk
-
-      
-    - name: Store APK
-      run: mkdir -p $GITHUB_WORKSPACE/apk && cp build/app/outputs/flutter-apk/app-debug.apk $GITHUB_WORKSPACE/apk/
