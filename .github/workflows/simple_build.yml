@@ -47,9 +47,13 @@ jobs:
       
     - name: Store APK
       run: mkdir -p $GITHUB_WORKSPACE/apk && cp build/app/outputs/flutter-apk/app-debug.apk $GITHUB_WORKSPACE/apk/
-    
+      
+    - name: Verify APK exists
+      run: ls -la $GITHUB_WORKSPACE/apk/app-debug.apk
+      
     - name: Upload APK as artifact
       uses: actions/upload-artifact@v4
+      if: success()
       with:
         name: app-debug-apk
         path: $GITHUB_WORKSPACE/apk/app-debug.apk
