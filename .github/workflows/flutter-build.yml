@@ -1,0 +1,68 @@
+name: Flutter Build
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+      
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.10.0'
+          channel: 'stable'
+          cache: true
+      
+      - name: Check Flutter version
+        run: flutter --version
+      
+      - name: Install dependencies
+        run: flutter pub get
+      
+      - name: Analyze code
+        run: flutter analyze --no-fatal-infos
+      
+      - name: Fix Gradle wrapper
+        run: |
+          echo "distributionBase=GRADLE_USER_HOME" > android/gradle/wrapper/gradle-wrapper.properties
+          echo "distributionPath=wrapper/dists" >> android/gradle/wrapper/gradle-wrapper.properties
+          echo "zipStoreBase=GRADLE_USER_HOME" >> android/gradle/wrapper/gradle-wrapper.properties
+          echo "zipStorePath=wrapper/dists" >> android/gradle/wrapper/gradle-wrapper.properties
+          echo "distributionUrl=https\://services.gradle.org/distributions/gradle-7.4-all.zip" >> android/gradle/wrapper/gradle-wrapper.properties
+      
+      - name: Build APK
+        run: flutter build apk --release --split-per-abi
+      
+      - name: Upload APK (arm64-v8a)
+        uses: actions/upload-artifact@v3
+        with:
+          name: roxcard-arm64-v8a
+          path: build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+      
+      - name: Upload APK (armeabi-v7a)
+        uses: actions/upload-artifact@v3
+        with:
+          name: roxcard-armeabi-v7a
+          path: build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+      
+      - name: Upload APK (x86_64)
+        uses: actions/upload-artifact@v3
+        with:
+          name: roxcard-x86_64
+          path: build/app/outputs/flutter-apk/app-x86_64-release.apk 

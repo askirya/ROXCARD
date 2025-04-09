@@ -1,0 +1,67 @@
+name: Release to Google Play
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up JDK 11
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: gradle
+    
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.10.0'
+        channel: 'stable'
+        cache: true
+    
+    - name: Install dependencies
+      run: flutter pub get
+    
+    - name: Get tag version
+      id: tag_version
+      run: echo "::set-output name=VERSION::${GITHUB_REF#refs/tags/v}"
+    
+    - name: Update version in pubspec.yaml
+      run: |
+        version=$(echo "${{ steps.tag_version.outputs.VERSION }}")
+        sed -i "s/version: .*/version: $version/" pubspec.yaml
+    
+    - name: Build AAB
+      run: flutter build appbundle
+    
+    - name: Create service account key file
+      run: echo '${{ secrets.PLAY_STORE_UPLOAD_KEY }}' > service_account_key.json
+    
+    - name: Upload to Google Play
+      uses: r0adkll/upload-google-play@v1
+      with:
+        serviceAccountJson: service_account_key.json
+        packageName: com.roxcard.app
+        releaseFiles: build/app/outputs/bundle/release/app-release.aab
+        track: production
+        status: completed
+        changesNotSentForReview: false
+    
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          build/app/outputs/flutter-apk/app-release.apk
+        body: |
+          Release ${{ steps.tag_version.outputs.VERSION }}
+          
+          See [CHANGELOG.md](https://github.com/owner/ROXCARD/blob/main/CHANGELOG.md) for details.
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 

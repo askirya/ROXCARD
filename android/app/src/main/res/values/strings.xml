@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ROXCARD</string>
+    <string name="service_description">ROXCARD Card Emulation Service</string>
+    <string name="aid_description">Payment Cards</string>
+</resources> 
